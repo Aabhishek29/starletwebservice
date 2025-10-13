@@ -3,6 +3,30 @@ const OTP = require('../models/otpModel');
 const whatsappService = require('../services/whatsappService');
 const jwtUtils = require('../utils/jwtUtils');
 
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken);
+
+const sendMsgToPhone = async (to, msg) => {
+  try {
+    const verification = await client.messages.create({
+      body: `Your Varification OTP : ${msg}`,
+      from: "+16267885323",
+      to: `+91${to}`  // this is only for india
+    });
+
+    console.log("OTP Sent Successfully. Verification SID:", verification.sid);
+    return {
+      success: true
+    }
+  } catch (error) {
+    console.error("Error sending OTP:", error.message);
+    return {
+      success: false
+    }
+  }
+}
+
 const otpController = {
   sendOTP: async (req, res) => {
     try {
@@ -27,7 +51,7 @@ const otpController = {
 
       const otpRecord = await OTP.createOTP(cleanedNumber);
 
-      const result = await whatsappService.sendOTP(cleanedNumber, otpRecord.otp);
+      const result = await sendMsgToPhone(cleanedNumber, otpRecord.otp);
 
       if (!result.success) {
         return res.status(500).json({
@@ -84,9 +108,9 @@ const otpController = {
           name
         });
 
-        await whatsappService.sendWelcomeMessage(cleanedNumber, name);
+        // await whatsappService.sendWelcomeMessage(cleanedNumber, name);
       } else {
-        await whatsappService.sendLoginNotification(cleanedNumber);
+        // await whatsappService.sendLoginNotification(cleanedNumber);
       }
 
       const userData = user.toJSON();
@@ -143,7 +167,9 @@ const otpController = {
 
       const otpRecord = await OTP.createOTP(cleanedNumber);
 
-      const result = await whatsappService.sendOTP(cleanedNumber, otpRecord.otp);
+      const result = await sendMsgToPhone(cleanedNumber, otpRecord.otp);
+
+      // const result = await whatsappService.sendOTP(cleanedNumber, otpRecord.otp);
 
       if (!result.success) {
         return res.status(500).json({

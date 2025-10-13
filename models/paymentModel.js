@@ -52,8 +52,7 @@ const Payment = sequelize.define('Payment', {
   },
   packageType: {
     type: DataTypes.ENUM('basic', 'standard', 'premium', 'custom'),
-    allowNull: false,
-    comment: 'Type of package purchased'
+    allowNull: false
   },
   sessionCount: {
     type: DataTypes.INTEGER,

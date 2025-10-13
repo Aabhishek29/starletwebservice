@@ -15,9 +15,7 @@ const jwtUtils = {
       isTrainer
     };
 
-    return jwt.sign(payload, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN
-    });
+    return jwt.sign(payload, JWT_SECRET);
   },
 
   generateRefreshToken: (userId) => {
@@ -40,12 +38,8 @@ const jwtUtils = {
       user.isTrainer
     );
 
-    const refreshToken = jwtUtils.generateRefreshToken(user.id);
-
     return {
-      accessToken,
-      refreshToken,
-      expiresIn: JWT_EXPIRES_IN
+      accessToken
     };
   },
 
