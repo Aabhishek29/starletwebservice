@@ -80,4 +80,7 @@ desktop.ini
 # PM2
 .pm2/
 pm2.json
-ecosystem.config.js
+
+# Security - PEM files
+*.pem
+deployment/*.pem
