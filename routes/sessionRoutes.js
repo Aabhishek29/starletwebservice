@@ -10,7 +10,7 @@ router.get('/upcoming', sessionController.getUpcomingSessions);
 router.use(authMiddleware.authenticate);
 
 // Session CRUD operations
-router.post('/', authMiddleware.isTrainer, sessionController.createSession);
+router.post('/', sessionController.createSession);
 router.get('/', sessionController.getAllSessions);
 router.get('/date-range', sessionController.getSessionsByDateRange);
 router.get('/date/:date', sessionController.getSessionsByDate);

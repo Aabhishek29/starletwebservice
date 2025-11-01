@@ -40,6 +40,28 @@ const sessionController = {
         });
       }
 
+      // Verify all users exist and convert to integers
+      if (users && users.length > 0) {
+        for (let i = 0; i < users.length; i++) {
+          const userId = parseInt(users[i]);
+          if (isNaN(userId)) {
+            return res.status(400).json({
+              success: false,
+              message: `Invalid user ID: ${users[i]}`
+            });
+          }
+          const user = await User.findById(userId);
+          if (!user) {
+            return res.status(400).json({
+              success: false,
+              message: `User not found with ID: ${userId}`
+            });
+          }
+          // Replace with integer version
+          users[i] = userId;
+        }
+      }
+
       // Verify trainer exists if trainerId provided
       if (trainerId) {
         const trainer = await User.findById(trainerId);
